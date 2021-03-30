@@ -7,13 +7,34 @@ output:
     highlight: pygments
 ---
 
-Now that we have leanrned how to work with a dockerfile, we can send all our analysis to a collaborator. 
+
+```{r knitr_init, echo = FALSE, cache = FALSE, include = FALSE}
+library(knitr)
+
+## Global options
+options(max.print = "75")
+opts_chunk$set(cache = TRUE,
+               prompt = FALSE,
+               tidy = TRUE,
+               comment = "> #",
+               message = FALSE,
+               warning = FALSE)
+opts_knit$set(width = 75)
+```
+
+## Optional
+This section can be deemed optional and read but not practiced if you are not yet at a stage where you need to provide others access to your Docker image. Feel free to move on to [Lesson 07 Examples of Workflow incorporation](07-dockerfiles.html) or keep reading for interest!
+
+
+Now that we have learned how to work with a dockerfile, we can send all our analysis to a collaborator. 
 We will share an image that contains all the dependencies that we need to ran our analysis, the data and the analysis.
+
+What is important to note, is that you are provided with a single private repository on Docker Hub with the free level of access, so consider any images pushed to be publicly available. Be careful with the data that you include in this image if you do not want it shared!!
 
 We will build this image via a dockerfile. Let's start with the basic verse rocker image we used before. 
 This time we want to have a specific R version (3.3.2), which the developers make possible by tagging the images with the version.
 See all available tags for the `rocker/verse` image [here](https://hub.docker.com/r/rocker/verse/tags/). The version tag is very
-useful when you want your analysis to be reproducible.
+useful when you want your analysis to be **reproducible**.
 
 ```
 FROM rocker/verse:3.3.2
@@ -104,12 +125,12 @@ Your image is now available for everyone to use.
 
 Now your collaborator can download your image. 
 
-Your collaborator should write on their command line:
+Your collaborator should type the following on their command line:
 
 ```
 docker pull yourhubusername/gapminder_my_analysis:firsttry
 ```
 
-They now have the image of your analysis.
+They now have the image of your analysis exactly as you wrote it.
 
-Click to go back to the [main page](http://ropenscilabs.github.io/r-docker-tutorial/).
+Go to [Lesson 07 Incorporating into a workflow](07-Incorporating-into-a-workflow.html) or back to the [main page](http://ropenscilabs.github.io/r-docker-tutorial/).

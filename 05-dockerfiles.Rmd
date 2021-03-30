@@ -7,10 +7,36 @@ output:
     highlight: pygments
 ---
 
+
+```{r knitr_init, echo = FALSE, cache = FALSE, include = FALSE}
+library(knitr)
+
+## Global options
+options(max.print = "75")
+opts_chunk$set(cache = TRUE,
+               prompt = FALSE,
+               tidy = TRUE,
+               comment = "> #",
+               message = FALSE,
+               warning = FALSE)
+opts_knit$set(width = 75)
+```
+
 Earlier, we got started with a base image that let us run RStudio from within Docker, and learned to modify the contents of that image using `docker commit`. This is an excellent technique for capturing what we've done so we can reproduce it later, but what if we want to be able to easily change the collection of things in our image, and have a clear record of just what went into it? This is useful when maintaining running environments that may change and evolve over a project, and is facilitated by Dockerfiles. 
 
-Dockerfiles are a set of instructions on how to add things to a base image. They build custom images up in a series of *layers*. In a new file called `Dockerfile`, put the following:
+In the context of reproducibility, we can create our own Dockerfiles with the necessary files and packages needed for reproducing results. Instead of sending someone R scripts and data and leaving them to figure out the setting up on their environment to match yours, why not just pass them a Docker image that has the packages and files ready set up? Analogous to simply letting them sit at your computer and running the results for themselves!
 
+Dockerfiles are a set of instructions on how to add things to a base image. They build custom images up in a series of *layers*.
+
+In this lesson, we will create a Dockerfile, install packages and attach some files ready for someone else to use. Much of this process is best done via the terminal. THis can look complex and serious business, but is relatively straight-forward. Create a new folder called "docker-test" somewhere useful on your local machine (there are a number of ways to achieve thus, either via Finder or via the terminal, I leave this to you). We then want to access this folder in the terminal, open terminal and then type in cd followed by the filepath for the folder:
+
+```
+cd Users/ivorym/docker-test
+```
+
+Then to create the dockerfile, we type `nano dockerfile` which creates and opens a file called dockerfile in the folder. We then need to create the image. To do so, we write the following on the first line"
+
+![terminal](files/terminal.png)
 ```
 FROM rocker/verse:latest
 ```
@@ -18,13 +44,23 @@ FROM rocker/verse:latest
 This tells Docker to start with the `rocker/verse` base image - that's what we've been using so far. 
 The `FROM` command must always be the first thing in your Dockerfile; this is the bottom crust of the pie we are baking.
 
-Next, let's add another layer on top of our base, in order to have `gapminder` pre-installed and ready to go:
+Next, let's add the package gapfinder as another layer on top of our base, in order to have `gapminder` pre-installed and ready to go:
 
 ```
 RUN R -e "install.packages('gapminder', repos = 'http://cran.us.r-project.org')"
 ```
 
-`RUN` commands in your Dockerfile execute shell commands to build up your image, like putting the filling in our pie. In this example, we install `gapminder` from the command line using `install.packages`, which does the same thing as if we had done `install.packages('gapminder')` from within RStudio. Save your Dockerfile, and return to your docker terminal; we can now build our image by doing:
+`RUN` commands in your Dockerfile execute shell commands to build up your image, like putting the filling in our pie. In this example, we install `gapminder` from the command line using `install.packages`, which does the same thing as if we had done `install.packages('gapminder')` from within RStudio. We can include as many `RUN` commands as we like, so perhaps we want to pre-install the package renv too?
+
+```
+RUN R -e "install.packages('renv', repos = 'http://cran.us.r-project.org')"
+```
+
+![nano](files/nano.png)
+
+Save your Dockerfile (by pressing Control + X and then pressing y, then enter), and return to your docker terminal; we have now created our first dockerfile!
+
+We can now use this file to build our image by typing the command:
 
 ```
 docker build -t my-r-image .
@@ -39,23 +75,25 @@ docker images
 and you should see `my-r-image` in the list. Launch your new image similarly to how we launched the base image:
 
 ```
-docker run --rm -p 8787:8787 my-r-image
+docker run --rm -e PASSWORD=pass -p 8787:8787 my-r-image
 ```
 
-Then in the RStudio terminal, try gapminder again:
+Then in the RStudio terminal, try gapminder or renv again:
 
 ```
 library('gapminder')
 gapminder
 ```
 
-And there it is - gapminder is pre-installed and ready to go in your new docker image. 
+And there it is - two packages, gapfinder and renv, are pre-installed and ready to go in your new docker image. 
 
-Our pie is almost complete! All we need to finish it is the topping. In addition to R packages like gapminder, we may also want some some static files inside our Docker image - such as data. We can do this using the `ADD` command in your Dockerfile:
+Our hypothetical pie is almost complete! All we need to finish  is the topping. In addition to R packages like gapminder, we may also want some some static files inside our Docker image - such as data. We can do this using the `ADD` command in your Dockerfile:
 
 ```
 ADD data/gapminder-FiveYearData.csv /home/rstudio/
 ```
+
+Make sure that you specified the images folder as `/home/rstudio/` as the minimum, otherwise you will not see the data!
 
 Rebuild your Docker image:
 
@@ -90,17 +128,6 @@ In this lesson, we learned how to compose a Dockerfile so that we can re-create 
  - `ADD` adds files from our computer to our new Docker image.
 
 The image is built by running `docker build -t my-r-image .` in the same directory as our Dockerfile and any files we want to include with an `ADD` command.
-
-## Challenge Questions 
- - Write a Dockerfile that makes an image like the one you made at the end of Section 3: built on `rocker/verse`, with `gapminder` and `gsl` installed. Also add a readme to your image describing what it contains.
-
-Find the Dockerfile of the `rocker/verse` image through Docker Hub. 
-
- - How does having a Dockerfile compare to a README file (like the one we prepared in lesson 3)?
- - Docker Hub can automatically build images when you store the file on Github
- or Bitbucket. What do you think are the benefits of doing this instead of 
- commiting the image directly? Could it be negative?
- - Find the build details of the `rocker/verse` image. What do they tell us?
 
 Go to [Lesson 06 Share all your analysis](06-Sharing-all-your-analysis.html) or back to the  
 [main page](http://ropenscilabs.github.io/r-docker-tutorial/).

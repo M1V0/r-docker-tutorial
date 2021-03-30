@@ -8,7 +8,7 @@ output:
 ---
 
 
-```{r knitr_init, echo = FALSE, cache = FALSE}
+```{r knitr_init, echo = FALSE, cache = FALSE, include = FALSE}
 library(knitr)
 
 ## Global options
@@ -62,7 +62,8 @@ An instance of an image is called container. An image is the setup of the virtua
 computer. If you run this image, you will have an instance of it, which we call
 container. You can have many running containers of the same image.
 
-
+## Of Note
+This tutorial is made up of a combination of both essential and optional information. Sections or page deemed optional to understanding how to use Docker in a more collaborative sense (such as pushing a Docker image to Docker hub or sharing with colleagues) are marked as optional. The information not marked as optional is core to understanding the way in which one would use Docker initially.
 
 Next: Go to [Lesson 02 Launching Docker](02-Launching-Docker.html) or back to the 
 [main page](http://ropenscilabs.github.io/r-docker-tutorial/).

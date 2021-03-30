@@ -8,7 +8,7 @@ output:
 ---
 
 
-```{r knitr_init, echo = FALSE, cache = FALSE}
+```{r knitr_init, echo = FALSE, cache = FALSE, include = FALSE}
 library(knitr)
 
 ## Global options
@@ -27,6 +27,9 @@ opts_knit$set(width = 75)
 - Understanding where images come from
 - Pulling a Docker image from Docker Hub
 - Pushing a Docker image to Docker Hub
+
+## Optional
+This section can be deemed optional and read but not practiced if you are not yet at a stage where you need to provide others access to your Docker image. Feel free to move on to [Lesson 05 Dockerfiles](05-dockerfiles.html) or keep reading for interest!
 
 
 ## Getting an image from Docker Hub
@@ -114,15 +117,6 @@ If we want to load that Docker container from the archived tar file in the futur
 ~~~
 docker load --input verse_gapminder.tar
 ~~~
-
-## Challenge Questions 
-
-- Download your partner's image. How did that compare speed-wise to downloading 
-the verse image the first time? 
-- Browse Docker Hub for interesting images. What could be useful to you?
-- Discuss the pros and cons of using Docker images from someone you don't
-know with your neighbour.
-
 
 Next: Go to [Lesson 05 Dockerfiles](05-dockerfiles.html) or back to the 
 [main page](http://ropenscilabs.github.io/r-docker-tutorial/).
