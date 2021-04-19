@@ -1,3 +1,6 @@
+# Forked Version
+In this version, I have adapted and developed the tutorial to be more directed at Psychologists and how to incorporate it into a workflow. In order to follow the tutorial, it is easiest to download the project and then start by opening the file '01-what-and-why.html'.
+
 # r-docker-tutorial
 A docker tutorial for reproducible research.
 
